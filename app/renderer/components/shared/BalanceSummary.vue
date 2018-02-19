@@ -3,12 +3,12 @@
         <el-main>
             <table>
                 <tr>
-                    <th>Total Balance</th>
-                    <td>3.00000000 ZEN</td>
+                    <th>{{ $t('summary.total') }}</th>
+                    <td>{{ totalBalance }} ZEN</td>
                 </tr>
                 <tr>
-                    <th>Fiat</th>
-                    <td>324 USD</td>
+                    <th>{{ $t('summary.fiat') }}</th>
+                    <td>{{ fiatBalance }} USD</td>
                 </tr>
             </table>
         </el-main>
@@ -21,17 +21,15 @@
         name: 'balance-summary',
         computed: {
             ...mapState([
-                'tBalance',
-                'zBalance',
-                'totalBalance'
+                'totalBalance',
+                'fiatBalance'
             ])
         },
     }
 </script>
 
-<style lang=less>
+<style lang=less scoped>
     .balance-container {
-        padding: 20px;
         text-align:left;
         background-color: #1b2f5a;
         color: #fff;

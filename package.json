@@ -136,7 +136,9 @@
     "vue-i18n": "^7.4.2",
     "zencashjs": "^1.1.9-a",
     "js-vue-logger": "^1.4.3",
-    "encryption": "file:lib/encryption"
+    "encryption": "file:lib/encryption",
+    "api": "file:lib/api",
+    "async-request": "^1.2.0"
   },
   "devDependencies": {
     "babel-core": "^6.25.0",

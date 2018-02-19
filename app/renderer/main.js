@@ -42,6 +42,17 @@ const messages = {
       addresses: 'Addressen',
       transactions: 'Transaktionen',
       logout: "Abmelden",
+    },
+    addresses: {
+      address: 'Addresse',
+      balance: 'ZEN',
+      operations: "Aktionen",
+      noaddresses: "Keine Addressen vorhanden",
+      name: "Name",
+    },
+    summary: {
+      total: 'Total',
+      fiat: "USD ~",
     }
   }
 }

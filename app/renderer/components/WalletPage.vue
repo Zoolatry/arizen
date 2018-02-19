@@ -1,5 +1,5 @@
 <template>
-    <el-container class=wallet-container>
+    <el-container>
         <el-header>
             <nav-menu></nav-menu>
         </el-header>
@@ -52,20 +52,22 @@
         alert('Copied ' + value + ' to clipboard.')
       }
     },
-    mounted: function() {     
+    mounted: function() {
+      this.$store.dispatch('refreshBalances');
     }
   }
 </script>
 
-<style lang=less>
-    .wallet-container header,
-    .wallet-container main,
-    .wallet-container footer {
+<style lang=less scoped>
+    header,
+    main,
+    footer {
         padding:0;
     }
 
-    .wallet-container footer {
+    footer {
         position:fixed;
         bottom:0;
+        width:100%;
     }
 </style>

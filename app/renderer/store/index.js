@@ -10,9 +10,8 @@ import bitcoin from "bitcoinjs-lib"
 import bip32utils from "bip32-utils"
 import zencashjs from "zencashjs"
 import sql from "sql.js"
-import request from "request"
-import fetch from "node-fetch"
 import encryption from "encryption"
+import api from "api"
 import log from "js-vue-logger"
 
 import modules from './modules'
@@ -29,6 +28,7 @@ export default new Vuex.Store({
         addresses: [],
         transactions: [],
         totalBalance: 0,
+        fiatBalance: 0,
         unconfirmedBalance: 0,
         availableBalance :0,
         tBalance: 0,
@@ -78,10 +78,14 @@ export default new Vuex.Store({
         }
     },
     mutations: {
-        updateAddress (state, newAddress) {
-            if (state.addresses.find( a => a.address == newAddress.address) == null) {
-                state.addresses.push(newAddress)
+        addAddress (state, addr) {
+            var existing = state.addresses.find(a => a.address == addr.address);
+            if (existing == null) {
+                state.addresses.push(addr);
             }
+        },
+        setAddressBalance(state, obj) {
+            state.addresses.find(a => a.address == obj.address).balance = obj.balance;
         },
         setAddresses (state, list) {
             state.addresses = list;
@@ -91,8 +95,11 @@ export default new Vuex.Store({
         },
         setTotalBalance (state, b) {            
             state.totalBalance = b;
-        },    
-        setUnconfirmedBalance (state, b) {            
+        },
+        setFiatBalance (state, b) {         
+            state.fiatBalance = b;
+        },
+        setUnconfirmedBalance (state, b) {
             state.unconfirmedBalance = b;
         },    
         setAvailableBalance (state, b) {            
@@ -107,6 +114,11 @@ export default new Vuex.Store({
         setTransactions (state, transactions) {      
             state.transactions = transactions;
         },
+        addTransaction (state, tx) {
+            if (state.transactions.find(t => t.txid == tx.txid) == null) {
+                state.transactions.push(tx);
+            }
+        },
         setUsername (state, username) {      
             state.username = username;
         },
@@ -118,9 +130,24 @@ export default new Vuex.Store({
         }
     },
     actions : {
-        refreshTransactions({ commit }) {
-            console.log("refreshing transactions");
+        async refreshTransactions({ commit }) {
+            log.info("refreshing transactions");
+            
+        },
+        async refreshBalances({ commit }) {
+            log.info("refreshing balances");
 
+            var totalBalance = 0;
+            for (var i in this.state.addresses) {
+                var item = this.state.addresses[i];
+                var balance = await api.getBalance(item.address);
+
+                totalBalance += balance;
+                commit('setAddressBalance', { address: item.address, balance: balance });
+            }
+            commit('setTotalBalance', totalBalance);
+            var fiat = await api.getFiat(totalBalance, "USD");
+            commit('setFiatBalance', fiat);
         },
         addTAddress({ commit }) {
         
